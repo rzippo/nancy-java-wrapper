@@ -1,15 +1,24 @@
 package it.unipi.nancy;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Sequence {
     List<Element> _elements;
+
+    @JsonGetter("elements")
     public List<Element> Elements() {
         return _elements;
     }
 
-    public Sequence(List<Element> elements) {
+    @JsonCreator
+    public Sequence(
+            @JsonProperty("elements") List<Element> elements
+    ) {
         _elements = elements;
     }
 

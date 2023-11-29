@@ -1,15 +1,17 @@
 package it.unipi.nancy.test;
 
+import com.fasterxml.jackson.core.StreamReadFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import it.unipi.nancy.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
-        var curveId = new Curve(
+        var curve = new Curve(
                 new Sequence(
                         Arrays.asList(
                                 new Point(0,0),
@@ -20,18 +22,19 @@ public class Main {
                 new Rational(1),
                         new Rational(1),
                 new Rational(3, 4)
-        ).submit();
-        var curveJson = Curve.GetJson(curveId);
+        );
+
+        curve.submit();
+        var curveJson = Curve.retrieveJson(curve.getId());
         System.out.println("f: " + curveJson + "\n");
 
-        var selfConvolutionId = Curve.Convolution(curveId, curveId);
-        var selfConvolutionJson = Curve.GetJson(selfConvolutionId);
+        var selfConvolution = Curve.convolution(curve, curve);
+        var selfConvolutionJson = Curve.retrieveJson(selfConvolution.getId());
         System.out.println("f * f: " + selfConvolutionJson + "\n");
 
-        var closureId = Curve.SubAdditiveClosure(selfConvolutionId);
-        var closureJson = Curve.GetJson(closureId);
+        var closure = Curve.subAdditiveClosure(selfConvolution);
+        var closureJson = Curve.retrieveJson(closure.getId());
         System.out.println("subadd closure: " + closureJson + "\n");
-
 
     }
 }
