@@ -6,7 +6,7 @@
 
     <groupId>it.unipi</groupId>
     <artifactId>nancy-wrapper</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>pom</packaging>
     <modules>
         <module>nancy-wrapper-test</module>
