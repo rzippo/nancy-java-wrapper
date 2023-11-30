@@ -32,6 +32,9 @@ public class Main {
         var selfConvolutionJson = Curve.retrieveJson(selfConvolution.getId());
         System.out.println("f * f: " + selfConvolutionJson + "\n");
 
+        var hdev = Curve.horizontalDeviation(curve, selfConvolution);
+        System.out.println(hdev);
+
         var closure = Curve.subAdditiveClosure(selfConvolution);
         var closureJson = Curve.retrieveJson(closure.getId());
         System.out.println("subadd closure: " + closureJson + "\n");

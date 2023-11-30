@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.*;
     "type",
     "startTime",
     "endTime",
-    "rightLimitOnStartTime",
+    "rightLimitAtStartTime",
     "slope"
 })
 public class Segment extends Element
@@ -28,10 +28,10 @@ public class Segment extends Element
         return _endTime;
     }
 
-    Rational _rightLimitOnStartTime;
-    @JsonGetter("rightLimitOnStartTime")
-    public Rational RightLimitOnStartTime() {
-        return _rightLimitOnStartTime;
+    Rational _rightLimitAtStartTime;
+    @JsonGetter("rightLimitAtStartTime")
+    public Rational rightLimitAtStartTime() {
+        return _rightLimitAtStartTime;
     }
 
     Rational _slope;
@@ -44,13 +44,13 @@ public class Segment extends Element
     public Segment(
             @JsonProperty("startTime") Rational startTime,
             @JsonProperty("endTime") Rational endTime,
-            @JsonProperty("rightLimitOnStartTime") Rational rightLimitOnStartTime,
+            @JsonProperty("rightLimitAtStartTime") Rational rightLimitAtStartTime,
             @JsonProperty("slope") Rational slope
     )
     {
         _startTime = startTime;
         _endTime = endTime;
-        _rightLimitOnStartTime = rightLimitOnStartTime;
+        _rightLimitAtStartTime = rightLimitAtStartTime;
         _slope = slope;
     }
 
@@ -59,7 +59,7 @@ public class Segment extends Element
                 "\"type\": \"segment\", " +
                 "\"startTime\": " + StartTime() + ", " +
                 "\"endTime\": " + EndTime() + ", " +
-                "\"rightLimitOnStartTime\": " + RightLimitOnStartTime() + ", " +
+                "\"rightLimitAtStartTime\": " + rightLimitAtStartTime() + ", " +
                 "\"slope\": " + Slope() +
                 " }";
     }

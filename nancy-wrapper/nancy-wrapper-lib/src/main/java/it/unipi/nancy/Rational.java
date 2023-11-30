@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.math.BigInteger;
+import java.util.Objects;
 
 @JsonPropertyOrder({"num", "den"})
 public class Rational {
@@ -55,7 +56,11 @@ public class Rational {
         _denominator = BigInteger.ONE;
     }
 
-    public String toString(){
-        return "{ \"num\": " + Numerator() + ", \"den\": " + Denominator() + " }";
+    public String toString()
+    {
+        if(Objects.equals(Denominator(), BigInteger.ONE))
+            return Numerator().toString();
+        else
+            return Numerator() + "/" + Denominator();
     }
 }

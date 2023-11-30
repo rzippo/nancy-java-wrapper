@@ -12,4 +12,9 @@ public class NancyHttpServer
     {
         return new URI("http://" + Host + ":" + Port + "/curve/" + operation);
     }
+
+    public static URI getOperationURI(String id, String operation) throws URISyntaxException
+    {
+        return new URI("http://" + Host + ":" + Port + "/curve/" + id + "/" + operation);
+    }
 }

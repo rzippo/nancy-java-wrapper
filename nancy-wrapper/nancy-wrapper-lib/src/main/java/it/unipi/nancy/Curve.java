@@ -118,7 +118,6 @@ public class Curve
             throw new IllegalStateException("Cannot submit a curve that is not retrieved.");
 
         var client = HttpClient.newHttpClient();
-        System.out.println(this);
         var request = HttpRequest.newBuilder()
                 .uri(new URI("http://localhost:1006/curve"))
                 .headers("Content-Type", "application/json")
@@ -193,6 +192,38 @@ public class Curve
         }
         IfNotOkThrow(response);
         return response.body();
+    }
+
+    public static Rational valueAt(Curve f) throws URISyntaxException, IOException, InterruptedException
+    {
+        return NancyHttpValueOperation(f, "valueAt", Rational.class);
+    }
+
+    public static Rational rightLimitAt(Curve f) throws URISyntaxException, IOException, InterruptedException
+    {
+        return NancyHttpValueOperation(f, "rightLimitAt", Rational.class);
+    }
+
+    public static Rational leftLimitAt(Curve f) throws URISyntaxException, IOException, InterruptedException
+    {
+        return NancyHttpValueOperation(f, "leftLimitAt", Rational.class);
+    }
+
+    public static String getCsharpCodeString(Curve f) throws URISyntaxException, IOException, InterruptedException
+    {
+        return NancyHttpValueOperation(f, "getCsharpCodeString", String.class);
+    }
+
+    public static Rational horizontalDeviation(Curve f, Curve g) throws URISyntaxException, IOException, InterruptedException
+    {
+        var operands = new ArrayList<>(List.of(f, g));
+        return NancyHttpValueOperation(operands, "horizontalDeviation", Rational.class);
+    }
+
+    public static Rational verticalDeviation(Curve f, Curve g) throws URISyntaxException, IOException, InterruptedException
+    {
+        var operands = new ArrayList<>(List.of(f, g));
+        return NancyHttpValueOperation(operands, "verticalDeviation", Rational.class);
     }
 
     public static Curve addition(Curve f, Curve g) throws URISyntaxException, IOException, InterruptedException
@@ -313,6 +344,69 @@ public class Curve
         var rootNode = mapper.readTree(response.body());
         var resultId = rootNode.asText();
         var result = new Curve(resultId);
+        return result;
+    }
+
+    public static <T> T NancyHttpValueOperation(Curve operand, String operation, Class<T> valueType) throws IOException, URISyntaxException, InterruptedException
+    {
+        var mapper = JsonMapper.builder()
+                .build();
+        HttpResponse<String> response;
+        try (var client = HttpClient.newHttpClient())
+        {
+            var request = HttpRequest.newBuilder()
+                    .uri(NancyHttpServer.getOperationURI(operand.getId(), operation))
+                    .headers("Content-Type", "application/json")
+                    .GET()
+                    .build();
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        }
+        IfNotOkThrow(response);
+
+        var result = mapper.readValue(response.body(), valueType);
+        return result;
+    }
+
+    public static <T> T NancyHttpValueOperation(String id, String operation, Class<T> valueType) throws IOException, URISyntaxException, InterruptedException
+    {
+        var mapper = JsonMapper.builder()
+                .build();
+        HttpResponse<String> response;
+        try (var client = HttpClient.newHttpClient())
+        {
+            var request = HttpRequest.newBuilder()
+                    .uri(NancyHttpServer.getOperationURI(id, operation))
+                    .headers("Content-Type", "application/json")
+                    .GET()
+                    .build();
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        }
+        IfNotOkThrow(response);
+
+        var result = mapper.readValue(response.body(), valueType);
+        return result;
+    }
+
+    public static <T> T NancyHttpValueOperation(List<Curve> operands, String operation, Class<T> valueType) throws IOException, URISyntaxException, InterruptedException
+    {
+        var ids = CurvesToIds(operands);
+        var mapper = JsonMapper.builder()
+                .build();
+        HttpResponse<String> response;
+        try (var client = HttpClient.newHttpClient())
+        {
+            var request = HttpRequest.newBuilder()
+                    .uri(NancyHttpServer.getOperationURI(operation))
+                    .headers("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(
+                            mapper.writeValueAsString(ids)
+                    ))
+                    .build();
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        }
+        IfNotOkThrow(response);
+
+        var result = mapper.readValue(response.body(), valueType);
         return result;
     }
 
