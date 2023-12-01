@@ -181,15 +181,13 @@ public class Curve
     public static String retrieveJson(String id) throws IOException, InterruptedException, URISyntaxException
     {
         HttpResponse<String> response;
-        try (var client = HttpClient.newHttpClient())
-        {
-            var request = HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:1006/curve/" + id))
-                    .headers("Content-Type", "application/json")
-                    .GET()
-                    .build();
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        }
+        var client = HttpClient.newHttpClient();
+        var request = HttpRequest.newBuilder()
+                .uri(new URI("http://localhost:1006/curve/" + id))
+                .headers("Content-Type", "application/json")
+                .GET()
+                .build();
+        response = client.send(request, HttpResponse.BodyHandlers.ofString());
         IfNotOkThrow(response);
         return response.body();
     }
@@ -303,7 +301,7 @@ public class Curve
         var mapper = JsonMapper.builder()
                 .build();
         HttpResponse<String> response;
-        try (var client = HttpClient.newHttpClient())
+        var client = HttpClient.newHttpClient();
         {
             var request = HttpRequest.newBuilder()
                     .uri(NancyHttpServer.getOperationURI(operation))
@@ -328,9 +326,8 @@ public class Curve
         var mapper = JsonMapper.builder()
                 .build();
         HttpResponse<String> response;
-        try (var client = HttpClient.newHttpClient())
-        {
-            var request = HttpRequest.newBuilder()
+        var client = HttpClient.newHttpClient();
+        var request = HttpRequest.newBuilder()
                     .uri(NancyHttpServer.getOperationURI(operation))
                     .headers("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(
@@ -338,7 +335,6 @@ public class Curve
                     ))
                     .build();
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        }
         IfNotOkThrow(response);
 
         var rootNode = mapper.readTree(response.body());
@@ -352,15 +348,13 @@ public class Curve
         var mapper = JsonMapper.builder()
                 .build();
         HttpResponse<String> response;
-        try (var client = HttpClient.newHttpClient())
-        {
-            var request = HttpRequest.newBuilder()
-                    .uri(NancyHttpServer.getOperationURI(operand.getId(), operation))
-                    .headers("Content-Type", "application/json")
-                    .GET()
-                    .build();
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        }
+        var client = HttpClient.newHttpClient();
+        var request = HttpRequest.newBuilder()
+                .uri(NancyHttpServer.getOperationURI(operand.getId(), operation))
+                .headers("Content-Type", "application/json")
+                .GET()
+                .build();
+        response = client.send(request, HttpResponse.BodyHandlers.ofString());
         IfNotOkThrow(response);
 
         var result = mapper.readValue(response.body(), valueType);
@@ -372,15 +366,13 @@ public class Curve
         var mapper = JsonMapper.builder()
                 .build();
         HttpResponse<String> response;
-        try (var client = HttpClient.newHttpClient())
-        {
-            var request = HttpRequest.newBuilder()
-                    .uri(NancyHttpServer.getOperationURI(id, operation))
-                    .headers("Content-Type", "application/json")
-                    .GET()
-                    .build();
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        }
+        var client = HttpClient.newHttpClient();
+        var request = HttpRequest.newBuilder()
+                .uri(NancyHttpServer.getOperationURI(id, operation))
+                .headers("Content-Type", "application/json")
+                .GET()
+                .build();
+        response = client.send(request, HttpResponse.BodyHandlers.ofString());
         IfNotOkThrow(response);
 
         var result = mapper.readValue(response.body(), valueType);
@@ -393,17 +385,15 @@ public class Curve
         var mapper = JsonMapper.builder()
                 .build();
         HttpResponse<String> response;
-        try (var client = HttpClient.newHttpClient())
-        {
-            var request = HttpRequest.newBuilder()
-                    .uri(NancyHttpServer.getOperationURI(operation))
-                    .headers("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(
-                            mapper.writeValueAsString(ids)
-                    ))
-                    .build();
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        }
+        var client = HttpClient.newHttpClient();
+        var request = HttpRequest.newBuilder()
+                .uri(NancyHttpServer.getOperationURI(operation))
+                .headers("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(
+                        mapper.writeValueAsString(ids)
+                ))
+                .build();
+        response = client.send(request, HttpResponse.BodyHandlers.ofString());
         IfNotOkThrow(response);
 
         var result = mapper.readValue(response.body(), valueType);
