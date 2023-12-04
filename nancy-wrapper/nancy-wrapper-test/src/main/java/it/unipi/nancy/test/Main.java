@@ -39,5 +39,7 @@ public class Main {
         var closureJson = Curve.retrieveJson(closure.getId());
         System.out.println("subadd closure: " + closureJson + "\n");
 
+        var value = Curve.rightLimitAt(closure, new Rational(10));
+        System.out.println(value);
     }
 }

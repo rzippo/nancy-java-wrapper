@@ -192,19 +192,19 @@ public class Curve
         return response.body();
     }
 
-    public static Rational valueAt(Curve f) throws URISyntaxException, IOException, InterruptedException
+    public static Rational valueAt(Curve f, Rational time) throws URISyntaxException, IOException, InterruptedException
     {
-        return NancyHttpValueOperation(f, "valueAt", Rational.class);
+        return NancyHttpValueOperation(f, "valueAt", time, Rational.class);
     }
 
-    public static Rational rightLimitAt(Curve f) throws URISyntaxException, IOException, InterruptedException
+    public static Rational rightLimitAt(Curve f, Rational time) throws URISyntaxException, IOException, InterruptedException
     {
-        return NancyHttpValueOperation(f, "rightLimitAt", Rational.class);
+        return NancyHttpValueOperation(f, "rightLimitAt", time, Rational.class);
     }
 
-    public static Rational leftLimitAt(Curve f) throws URISyntaxException, IOException, InterruptedException
+    public static Rational leftLimitAt(Curve f, Rational time) throws URISyntaxException, IOException, InterruptedException
     {
-        return NancyHttpValueOperation(f, "leftLimitAt", Rational.class);
+        return NancyHttpValueOperation(f, "leftLimitAt", time, Rational.class);
     }
 
     public static String getCsharpCodeString(Curve f) throws URISyntaxException, IOException, InterruptedException
@@ -296,6 +296,11 @@ public class Curve
         return NancyHttpOperation(f, "subAdditiveClosure");
     }
 
+    public static Curve superAdditiveClosure(Curve f) throws URISyntaxException, IOException, InterruptedException
+    {
+        return NancyHttpOperation(f, "superAdditiveClosure");
+    }
+
     public static Curve NancyHttpOperation(Curve operand, String operation) throws IOException, URISyntaxException, InterruptedException
     {
         var mapper = JsonMapper.builder()
@@ -371,6 +376,26 @@ public class Curve
                 .uri(NancyHttpServer.getOperationURI(id, operation))
                 .headers("Content-Type", "application/json")
                 .GET()
+                .build();
+        response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        IfNotOkThrow(response);
+
+        var result = mapper.readValue(response.body(), valueType);
+        return result;
+    }
+
+    public static <T> T NancyHttpValueOperation(Curve operand, String operation, Rational time, Class<T> valueType) throws IOException, URISyntaxException, InterruptedException
+    {
+        var mapper = JsonMapper.builder()
+                .build();
+        HttpResponse<String> response;
+        var client = HttpClient.newHttpClient();
+        var request = HttpRequest.newBuilder()
+                .uri(NancyHttpServer.getOperationURI(operand.getId(), operation))
+                .headers("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(
+                        mapper.writeValueAsString(time)
+                ))
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
         IfNotOkThrow(response);
