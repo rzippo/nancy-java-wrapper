@@ -34,13 +34,14 @@ public class NancyHttpServer
         if (testIfRunning())
             return null;
 
-        // todo: run from resource folder
-        throw new UnsupportedOperationException("Not implemented yet") ;
+        var builder = new ProcessBuilder(
+            "./nancy-http/bin/nancy-http",
+            "--urls",
+            "http://localhost:" + Port
+        );
+        var process = builder.start();
 
-//        var builder = new ProcessBuilder();
-//        var process = builder.start();
-//
-//        return process;
+        return process;
     }
 
     public static boolean testIfRunning() throws URISyntaxException, InterruptedException {
