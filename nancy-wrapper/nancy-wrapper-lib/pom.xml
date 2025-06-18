@@ -6,10 +6,28 @@
     <parent>
         <groupId>it.unipi</groupId>
         <artifactId>nancy-wrapper</artifactId>
-        <version>1.0</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>nancy-wrapper-lib</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>Nancy wrapper for Java</name>
+    <description>Uses the Nancy HTTP API to run its algortithms from Java</description>
+    <url>https://nancy.unipi.it</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/license/mit/</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/rzippo/nancy-java-wrapper</url>
+    </scm>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
